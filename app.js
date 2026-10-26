@@ -149,11 +149,11 @@
     if (faceapi) return Promise.resolve(faceapi);
     if (faceLoading) return faceLoading;
     faceLoading = (async () => {
-      if (!window.faceapi) await new Promise((res, rej) => { const s = document.createElement('script'); s.src = '/face/face-api.js'; s.onload = res; s.onerror = () => rej(new Error('script')); document.head.append(s); });
+      if (!window.faceapi) await new Promise((res, rej) => { const s = document.createElement('script'); s.src = 'face/face-api.js'; s.onload = res; s.onerror = () => rej(new Error('script')); document.head.append(s); });
       const f = window.faceapi;
       try { await f.tf.setBackend('webgl'); } catch (e) {}
       await f.tf.ready();
-      await Promise.all([f.nets.ssdMobilenetv1.loadFromUri('/face/model'), f.nets.faceLandmark68Net.loadFromUri('/face/model'), f.nets.faceRecognitionNet.loadFromUri('/face/model')]);
+      await Promise.all([f.nets.ssdMobilenetv1.loadFromUri('face/model'), f.nets.faceLandmark68Net.loadFromUri('face/model'), f.nets.faceRecognitionNet.loadFromUri('face/model')]);
       faceapi = f; render(); return f;
     })();
     faceLoading.catch(() => { faceLoading = null; render(); });
@@ -480,7 +480,7 @@
   function topBar() {
     const p = project();
     return el('div', { class: 'top' },
-      el('div', { class: 'brand' }, el('img', { src: '/icon-192.png', alt: '' }),
+      el('div', { class: 'brand' }, el('img', { src: 'icon-192.png', alt: '' }),
         el('div', {}, el('div', { class: 'eyebrow', text: 'Nieves Construction Services' }),
           S.projects.length > 1 ? el('select', { class: 'proj', id: 'proj-pick', 'aria-label': 'Project', onchange: (e) => pickProject(e.target.value) },
             !p ? el('option', { value: '', text: 'Choose project…' }) : null, S.projects.map((x) => el('option', { value: x.id, selected: x.id === S.pid ? '' : false, text: x.name })))
@@ -491,7 +491,7 @@
   function renderAuth(mode = 'in') {
     const msg = el('p', { class: 'err', role: 'alert' });
     const form = el('form', { class: 'panel auth' },
-      el('div', { class: 'brand' }, el('img', { src: '/icon-192.png', alt: '' }), el('div', {}, el('div', { class: 'eyebrow', text: 'Nieves Construction Services' }), el('h1', { text: 'Site attendance' }))),
+      el('div', { class: 'brand' }, el('img', { src: 'icon-192.png', alt: '' }), el('div', {}, el('div', { class: 'eyebrow', text: 'Nieves Construction Services' }), el('h1', { text: 'Site attendance' }))),
       mode === 'up' ? field('au-name', 'Full name', el('input', { id: 'au-name', type: 'text', autocomplete: 'name', required: '' })) : null,
       field('au-email', 'Email', el('input', { id: 'au-email', type: 'email', autocomplete: 'email', required: '' })),
       field('au-pass', 'Password', el('input', { id: 'au-pass', type: 'password', autocomplete: mode === 'up' ? 'new-password' : 'current-password', minlength: '8', required: '' })),
@@ -666,7 +666,7 @@
   }
 
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && S.pid && S.me && S.me.role !== 'pending') reload(); });
-  if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
+  if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
   sb.auth.onAuthStateChange((ev) => { if (ev === 'SIGNED_OUT') { S.me = null; renderAuth('in'); } });
   boot();
 })();
